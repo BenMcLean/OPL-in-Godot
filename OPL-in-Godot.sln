@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OPL-in-Godot", "OPL-in-Godot.csproj", "{F1EEAA30-79F9-4923-9005-2C6E609FD3AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OPL", "OPL\OPL.csproj", "{CD3EEF6C-0D20-42AD-A2B1-920ECDEB6C7D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Tools|Any CPU = Tools|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1EEAA30-79F9-4923-9005-2C6E609FD3AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1EEAA30-79F9-4923-9005-2C6E609FD3AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1EEAA30-79F9-4923-9005-2C6E609FD3AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1EEAA30-79F9-4923-9005-2C6E609FD3AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1EEAA30-79F9-4923-9005-2C6E609FD3AB}.Tools|Any CPU.ActiveCfg = Tools|Any CPU
+		{F1EEAA30-79F9-4923-9005-2C6E609FD3AB}.Tools|Any CPU.Build.0 = Tools|Any CPU
+		{CD3EEF6C-0D20-42AD-A2B1-920ECDEB6C7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD3EEF6C-0D20-42AD-A2B1-920ECDEB6C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD3EEF6C-0D20-42AD-A2B1-920ECDEB6C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD3EEF6C-0D20-42AD-A2B1-920ECDEB6C7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD3EEF6C-0D20-42AD-A2B1-920ECDEB6C7D}.Tools|Any CPU.ActiveCfg = Release|Any CPU
+		{CD3EEF6C-0D20-42AD-A2B1-920ECDEB6C7D}.Tools|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2579CC1A-5B8C-46AC-A4C9-2BA17DE7BC93}
+	EndGlobalSection
+EndGlobal
