@@ -6,22 +6,60 @@ namespace OPLinGodot
 {
     public class ImfPlayer : Node
     {
-        public AudioStreamPlayer AudioStreamPlayer { get; set; }
-        public AudioStreamGenerator AudioStreamGenerator { get; set; }
+        public IOpl Opl { get; set; }
+        private readonly int hz = 48000;
+
+        private AudioStreamPlayer audioStreamPlayer;
+        public AudioStreamPlayer AudioStreamPlayer
+        {
+            get
+            {
+                return audioStreamPlayer;
+            }
+            set
+            {
+                audioStreamPlayer = value;
+                value.Stream = new AudioStreamGenerator()
+                {
+                    MixRate = hz,
+                    BufferLength = 512
+                };
+            }
+        }
+
         public AudioStreamGeneratorPlayback AudioStreamGeneratorPlayback
         {
             get
             {
-                return AudioStreamGeneratorPlayback == null && AudioStreamPlayer != null ?
-                    (AudioStreamGeneratorPlayback)AudioStreamPlayer.GetStreamPlayback()
-                    : null;
+                return (AudioStreamGeneratorPlayback)AudioStreamPlayer?.GetStreamPlayback();
             }
+        }
+
+        public AudioStreamGenerator AudioStreamGenerator
+        {
+            get
+            {
+                return (AudioStreamGenerator)AudioStreamPlayer?.GetStream();
+            }
+        }
+
+        public override void _Ready()
+        {
+            base._Ready();
+            Opl.Init(hz);
         }
 
         public override void _Process(float delta)
         {
             base._Process(delta);
             // Input
+            PlayNotes(delta);
+            // Output
+            FillBuffer();
+        }
+
+        public ImfPlayer PlayNotes(float delta)
+        {
             if (AudioStreamPlayer.Playing)
             {
                 TimeSinceLastPacket += delta;
@@ -38,34 +76,27 @@ namespace OPLinGodot
                     CurrentPacketDelay = Delay(Song[CurrentPacket].Delay);
                 }
             }
-
-            // Output
-            int delay = (int)(delta * 700f);
-            if (AudioStreamGeneratorPlayback.CanPushBuffer(delay))
-            {
-                if (buffer.Length < delay)
-                    buffer = new short[delay];
-                Opl.ReadBuffer(buffer, 0, delay);
-                if (frames.Length < delay)
-                    frames = new Vector2[delay];
-                for (uint i=0; i<delay; i++)
-                {
-                    if (frames[i] == null)
-                        frames[i] = new Vector2(buffer[i], buffer[i]);
-                    else
-                    {
-                        frames[i].x = buffer[i];
-                        frames[i].y = buffer[i];
-                    }
-                    AudioStreamGeneratorPlayback.PushFrame(frames[i]);
-                }
-            }
+            return this;
         }
 
-        short[] buffer = new short[700];
-        Vector2[] frames = new Vector2[700];
+        public ImfPlayer FillBuffer()
+        {
+            int toFill = AudioStreamGeneratorPlayback.GetFramesAvailable();
+            if (Buffer.Length < toFill)
+                Buffer = new short[toFill];
+            Opl.ReadBuffer(Buffer, 0, toFill);
+            for (uint i = 0; i < toFill; i++)
+            {
+                float foo = Buffer[i] / 32767f;
+                Vector2 vector2 = Vector2Pool.Get();
+                vector2.Set(foo, foo);
+                AudioStreamGeneratorPlayback.PushFrame(vector2);
+                Vector2Pool.Return(vector2);
+            }
+            return this;
+        }
 
-        public IOpl Opl { get; set; }
+        short[] Buffer = new short[512];
 
         public ImfPacket[] Song
         {
@@ -79,13 +110,9 @@ namespace OPLinGodot
                 CurrentPacket = 0;
                 CurrentPacketDelay = Delay(song[CurrentPacket].Delay);
                 TimeSinceLastPacket = 0f;
-                //SongLength = 0f;
-                //foreach (ImfPacket packet in value)
-                //    SongLength += Delay(packet.Delay);
             }
         }
         private ImfPacket[] song;
-
 
         public static float Delay(ushort time)
         {
@@ -108,17 +135,5 @@ namespace OPLinGodot
         private uint currentPacket = 0;
 
         public float TimeSinceLastPacket { get; set; } = 0f;
-
-        //public float SongLength
-        //{
-        //    get
-        //    {
-        //        return SongLength;
-        //    }
-        //    private set
-        //    {
-        //        SongLength = value;
-        //    }
-        //}
     }
 }

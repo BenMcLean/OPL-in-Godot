@@ -9,40 +9,20 @@ using static OPL.Imf;
 
 public class Main : Control
 {
-    //public ImfPacket[] imf;
-    public static IOpl Opl { get; set; } = new DosBoxOPL(OplType.Opl3);
-
-    // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        Tone tone = new Tone()
+        ImfPlayer imfPlayer = new ImfPlayer()
         {
+            Opl = new DosBoxOPL(OplType.Opl2),
+            Song = ReadImf("WONDERIN_MUS.imf"),
             AudioStreamPlayer = new AudioStreamPlayer()
         };
-        AddChild(tone.AudioStreamPlayer);
-        AddChild(tone);
-
-        //ImfPlayer imfPlayer = new ImfPlayer()
-        //{
-        //    Opl = Opl,
-        //    Song = ReadImf("WONDERIN_MUS.imf"),
-        //    AudioStreamGenerator = audioStreamGenerator,
-        //    AudioStreamPlayer = new AudioStreamPlayer()
-        //    {
-        //        Stream = audioStreamGenerator,
-        //        VolumeDb = 0.01f
-        //    }
-        //};
-
-        //AddChild(imfPlayer);
-        //AddChild(imfPlayer.AudioStreamPlayer);
-        //imfPlayer.AudioStreamPlayer.Play();
-
-        }
-
-    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(float delta)
-    {
-
+        AddChild(imfPlayer);
+        AddChild(imfPlayer.AudioStreamPlayer);
     }
+
+    //public override void _Process(float delta)
+    //{
+
+    //}
 }
