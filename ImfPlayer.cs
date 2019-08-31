@@ -103,7 +103,7 @@ namespace OPLinGodot
             }
             for (uint i = 0; i < toFill; i++)
             {
-                float foo = Buffer[i] / 32767f;
+                float foo = Buffer[i] / 32767f; // Convert from 16 bit signed integer audio to 32 bit signed float audio
                 Vector2 vector2 = Vector2Pool.Get();
                 vector2.Set(foo, foo);
                 AudioStreamGeneratorPlayback.PushFrame(vector2);
