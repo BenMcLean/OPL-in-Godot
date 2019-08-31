@@ -53,6 +53,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tone.cs" />
+    <Compile Include="Vector2Pool.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="OPL\OPL.csproj">
