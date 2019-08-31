@@ -11,9 +11,20 @@ namespace OPL
     {
         public struct ImfPacket
         {
-            public byte Register { get; set; } // Sent to register port.
-            public byte Data { get; set; } // Sent to data port.
-            public ushort Delay { get; set; } // How much to wait.
+            /// <summary>
+            /// Sent to register port.
+            /// </summary>
+            public byte Register { get; set; }
+
+            /// <summary>
+            /// Sent to data port.
+            /// </summary>
+            public byte Data { get; set; }
+
+            /// <summary>
+            /// How much to wait.
+            /// </summary>
+            public ushort Delay { get; set; }
         }
 
         public static ushort ReadWord(this FileStream file)
@@ -31,14 +42,17 @@ namespace OPL
             };
         }
 
+        /// <summary>
+        /// Reading in IMF files based on http://www.shikadi.net/moddingwiki/IMF_Format
+        /// </summary>
         public static ImfPacket[] ReadImf(string filename)
         {
             ImfPacket[] imf;
             using (FileStream file = new FileStream(filename, FileMode.Open))
             {
-                ushort length = (ushort)(file.ReadWord() / 4); // divide by 4 for the 4 byte packets
+                ushort length = (ushort)(file.ReadWord() / 4); // Length is provided in number of bytes. Divide by 4 to get the number of 4 byte packets.
                 if (length == 0)
-                {
+                { // Type-0 format
                     file.Seek(0, 0);
                     List<ImfPacket> list = new List<ImfPacket>();
                     while (file.Position < file.Length)
@@ -46,7 +60,7 @@ namespace OPL
                     imf = list.ToArray();
                 }
                 else
-                {
+                { // Type-1 format
                     imf = new ImfPacket[length];
                     for (uint i = 0; i < imf.Length; i++)
                         imf[i] = file.ReadImfPacket();

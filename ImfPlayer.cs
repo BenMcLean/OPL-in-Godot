@@ -7,7 +7,6 @@ namespace OPLinGodot
     public class ImfPlayer : Node
     {
         public IOpl Opl { get; set; }
-        private readonly int hz = 48000;
 
         public bool Loop { get; set; } = true;
 
@@ -23,7 +22,7 @@ namespace OPLinGodot
                 audioStreamPlayer = value;
                 value.Stream = new AudioStreamGenerator()
                 {
-                    MixRate = hz
+                    MixRate = 48000
                 };
             }
         }
@@ -47,7 +46,7 @@ namespace OPLinGodot
         public override void _Ready()
         {
             base._Ready();
-            Opl.Init(hz);
+            Opl.Init((int)AudioStreamGenerator.MixRate);
             FillBuffer();
             AudioStreamPlayer.Play();
         }
@@ -56,7 +55,8 @@ namespace OPLinGodot
         {
             base._Process(delta);
             // Input
-            PlayNotes(delta);
+            if (AudioStreamPlayer.Playing)
+                PlayNotes(delta);
             // Output
             FillBuffer();
         }
@@ -80,7 +80,7 @@ namespace OPLinGodot
                         Delay(Song[CurrentPacket].Delay)
                         : 0;
                 }
-                if (Loop && CurrentPacket >= Song.Length - 1)
+                if (Loop && CurrentPacket >= Song.Length)
                     Song = Song;
             }
             return this;
