@@ -49,6 +49,7 @@
     <Compile Include="DosBox\DosBoxOPL_Shared.cs" />
     <Compile Include="DosBox\OplChip.cs" />
     <Compile Include="DosBox\OplTimer.cs" />
+    <Compile Include="Imf.cs" />
     <Compile Include="IOpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
