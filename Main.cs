@@ -15,44 +15,33 @@ public class Main : Control
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        AudioStreamGenerator audioStreamGenerator = new AudioStreamGenerator()
+        Tone tone = new Tone()
         {
-            MixRate = 7000,
-            BufferLength = 700
-        };
-        ImfPlayer imfPlayer = new ImfPlayer()
-        {
-            Opl = Opl,
-            Song = ReadImf("WONDERIN_MUS.imf"),
-            AudioStreamGenerator = audioStreamGenerator,
             AudioStreamPlayer = new AudioStreamPlayer()
             {
-                Stream = audioStreamGenerator,
-                VolumeDb = 0.01f
+                Stream = new AudioStreamGenerator()
             }
         };
 
-        AddChild(imfPlayer);
-        AddChild(imfPlayer.AudioStreamPlayer);
-        imfPlayer.AudioStreamPlayer.Play();
+        AddChild(tone.AudioStreamPlayer);
+        AddChild(tone);
 
-            //    AudioStreamSample audioStreamSample = new AudioStreamSample()
-            //    {
-            //        Data = VSwap.ConcatArrays(
-            //    Assets.VSwap.Pages[Assets.VSwap.SoundPage],
-            //    Assets.VSwap.Pages[Assets.VSwap.SoundPage + 1]
-            //),
-            //        Format = AudioStreamSample.FormatEnum.Format8Bits,
-            //        MixRate = 7000,
-            //        Stereo = false
-            //    };
-            //    AudioStreamPlayer audioStreamPlayer = new AudioStreamPlayer()
-            //    {
-            //        Stream = audioStreamSample,
-            //        VolumeDb = 0.01f
-            //    };
-            //    AddChild(audioStreamPlayer);
-            //    audioStreamPlayer.Play();
+        //ImfPlayer imfPlayer = new ImfPlayer()
+        //{
+        //    Opl = Opl,
+        //    Song = ReadImf("WONDERIN_MUS.imf"),
+        //    AudioStreamGenerator = audioStreamGenerator,
+        //    AudioStreamPlayer = new AudioStreamPlayer()
+        //    {
+        //        Stream = audioStreamGenerator,
+        //        VolumeDb = 0.01f
+        //    }
+        //};
+
+        //AddChild(imfPlayer);
+        //AddChild(imfPlayer.AudioStreamPlayer);
+        //imfPlayer.AudioStreamPlayer.Play();
+
         }
 
     //  // Called every frame. 'delta' is the elapsed time since the previous frame.
