@@ -40,7 +40,10 @@ namespace OPLinGodot
             set
             {
                 audioStreamPlayer = value;
-                value.Stream = new AudioStreamGenerator();
+                value.Stream = new AudioStreamGenerator()
+                {
+                    MixRate = hz
+                };
             }
         }
 
@@ -63,7 +66,6 @@ namespace OPLinGodot
         public override void _Ready()
         {
             base._Ready();
-            AudioStreamGenerator.MixRate = hz;
             FillBuffer();
             AudioStreamPlayer.Play();
         }

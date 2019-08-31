@@ -83,9 +83,18 @@ namespace OPLinGodot
         public ImfPlayer FillBuffer()
         {
             int toFill = AudioStreamGeneratorPlayback.GetFramesAvailable();
-            if (Buffer.Length < toFill)
-                Buffer = new short[toFill];
-            Opl.ReadBuffer(Buffer, 0, toFill);
+            if (Opl.IsStereo)
+            {
+                if (Buffer.Length < toFill * 2)
+                    Buffer = new short[toFill * 2];
+                Opl.ReadBuffer(Buffer, 0, toFill * 2);
+            }
+            else
+            {
+                if (Buffer.Length < toFill)
+                    Buffer = new short[toFill];
+                Opl.ReadBuffer(Buffer, 0, toFill);
+            }
             for (uint i = 0; i < toFill; i++)
             {
                 float foo = Buffer[i] / 32767f;
@@ -130,7 +139,7 @@ namespace OPLinGodot
             }
             set
             {
-                currentPacket = value % (uint)Song.Length;
+                currentPacket = value;
             }
         }
         private uint currentPacket = 0;

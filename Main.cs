@@ -13,7 +13,7 @@ public class Main : Control
     {
         ImfPlayer imfPlayer = new ImfPlayer()
         {
-            Opl = new DosBoxOPL(OplType.Opl2),
+            Opl = new DosBoxOPL(OplType.Opl3),
             Song = ReadImf("WONDERIN_MUS.imf"),
             AudioStreamPlayer = new AudioStreamPlayer()
         };
