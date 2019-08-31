@@ -18,11 +18,7 @@ public class Main : Control
         Tone tone = new Tone()
         {
             AudioStreamPlayer = new AudioStreamPlayer()
-            {
-                Stream = new AudioStreamGenerator()
-            }
         };
-
         AddChild(tone.AudioStreamPlayer);
         AddChild(tone);
 

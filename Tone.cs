@@ -7,16 +7,43 @@ using System.Threading.Tasks;
 
 namespace OPLinGodot
 {
+    /// <summary>
+    /// This class just generates a tone.
+    /// 
+    /// It is a direct port of the AudioStreamGenerator demo at https://github.com/godotengine/godot-demo-projects/tree/master/audio/generator
+    /// 
+    /// The following example code shows how to get this class to work:
+    /// Tone tone = new Tone()
+    /// {
+    ///     AudioStreamPlayer = new AudioStreamPlayer()
+    /// };
+    /// AddChild(tone.AudioStreamPlayer);
+    /// AddChild(tone);
+    /// </summary>
     class Tone : Node
     {
         // To convert audio to floats!
         //float = float(int16) / 32767
         //float = float (int8) /127
 
-        float hz = 22050.0f; // less samples to mix
+        readonly float hz = 22050f; // less samples to mix
         float phase = 0f;
-        float pulse_hz = 440f;
-        public AudioStreamPlayer AudioStreamPlayer { get; set; }
+        readonly float pulse_hz = 440f;
+
+        private AudioStreamPlayer audioStreamPlayer;
+        public AudioStreamPlayer AudioStreamPlayer
+        {
+            get
+            {
+                return audioStreamPlayer;
+            }
+            set
+            {
+                audioStreamPlayer = value;
+                value.Stream = new AudioStreamGenerator();
+            }
+        }
+
         public AudioStreamGeneratorPlayback AudioStreamGeneratorPlayback
         {
             get
@@ -57,15 +84,17 @@ namespace OPLinGodot
                 Vector2 vector2 = GetVector2();
                 vector2.Set(foo, foo);
                 AudioStreamGeneratorPlayback.PushFrame(vector2);
-                Vector2Pool.Push(vector2);
+                Vector2Pool.Enqueue(vector2);
                 phase = (phase + increment) % 1f;
             }
         }
 
-        private Stack<Vector2> Vector2Pool = new Stack<Vector2>();
+        private Vector2 Vector2 { get; set; } = new Vector2(0f, 0f);
+
+        private Queue<Vector2> Vector2Pool = new Queue<Vector2>();
         private Vector2 GetVector2()
         {
-            return Vector2Pool.Count > 0 ? Vector2Pool.Pop() : new Vector2(0f, 0f);
+            return Vector2Pool.Count > 0 ? Vector2Pool.Dequeue() : new Vector2(0f, 0f);
         }
     }
 }
