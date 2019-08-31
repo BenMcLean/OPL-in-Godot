@@ -21,8 +21,7 @@ namespace OPLinGodot
                 audioStreamPlayer = value;
                 value.Stream = new AudioStreamGenerator()
                 {
-                    MixRate = hz,
-                    BufferLength = 512
+                    MixRate = hz
                 };
             }
         }
@@ -47,6 +46,8 @@ namespace OPLinGodot
         {
             base._Ready();
             Opl.Init(hz);
+            FillBuffer();
+            AudioStreamPlayer.Play();
         }
 
         public override void _Process(float delta)
