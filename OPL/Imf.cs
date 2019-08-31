@@ -36,7 +36,7 @@ namespace OPL
             ImfPacket[] imf;
             using (FileStream file = new FileStream(filename, FileMode.Open))
             {
-                ushort length = file.ReadWord();
+                ushort length = (ushort)(file.ReadWord() / 4); // divide by 4 for the 4 byte packets
                 if (length == 0)
                 {
                     file.Seek(0, 0);

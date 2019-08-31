@@ -9,6 +9,8 @@ namespace OPLinGodot
         public IOpl Opl { get; set; }
         private readonly int hz = 48000;
 
+        public bool Loop { get; set; } = true;
+
         private AudioStreamPlayer audioStreamPlayer;
         public AudioStreamPlayer AudioStreamPlayer
         {
@@ -74,8 +76,12 @@ namespace OPLinGodot
                             Opl.WriteReg(Song[CurrentPacket].Register, Song[CurrentPacket].Data);
                     }
                     while (CurrentPacket < Song.Length && Song[CurrentPacket].Delay == 0);
-                    CurrentPacketDelay = Delay(Song[CurrentPacket].Delay);
+                    CurrentPacketDelay = CurrentPacket < Song.Length ?
+                        Delay(Song[CurrentPacket].Delay)
+                        : 0;
                 }
+                if (Loop && CurrentPacket >= Song.Length - 1)
+                    Song = Song;
             }
             return this;
         }
@@ -106,7 +112,7 @@ namespace OPLinGodot
             return this;
         }
 
-        short[] Buffer = new short[512];
+        private short[] Buffer = new short[512];
 
         public ImfPacket[] Song
         {
@@ -131,18 +137,7 @@ namespace OPLinGodot
 
         private float CurrentPacketDelay = 0f;
 
-        public uint CurrentPacket
-        {
-            get
-            {
-                return currentPacket;
-            }
-            set
-            {
-                currentPacket = value;
-            }
-        }
-        private uint currentPacket = 0;
+        public uint CurrentPacket { get; set; } = 0;
 
         public float TimeSinceLastPacket { get; set; } = 0f;
     }
