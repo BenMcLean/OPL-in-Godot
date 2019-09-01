@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OPL
 {
+    /// <summary>
+    /// Parses and stores IMF format music data. http://www.shikadi.net/moddingwiki/IMF_Format
+    /// </summary>
     public static class Imf
     {
+        /// <summary>
+        /// A song is just an array of ImfPackets
+        /// </summary>
         public struct ImfPacket
         {
             /// <summary>
