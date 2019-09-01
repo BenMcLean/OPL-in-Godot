@@ -83,12 +83,12 @@ namespace OPLinGodot
             for (uint i = 0; i < toFill; i++)
             {
                 float foo = Godot.Mathf.Sin(phase * (Godot.Mathf.Pi * 2f));
-                Vector2 vector2 = Vector2Pool.Get();
-                vector2.Set(foo, foo);
-                AudioStreamGeneratorPlayback.PushFrame(vector2);
-                Vector2Pool.Return(vector2);
+                Vector2.Set(foo, foo);
+                AudioStreamGeneratorPlayback.PushFrame(Vector2);
                 phase = (phase + increment) % 1f;
             }
         }
+
+        private Vector2 Vector2 = new Vector2(0f, 0f);
     }
 }

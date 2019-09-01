@@ -47,8 +47,9 @@ namespace OPLinGodot
         {
             base._Ready();
             Opl.Init((int)AudioStreamGenerator.MixRate);
-            FillBuffer();
             AudioStreamPlayer.Play();
+            PlayNotes(float.Epsilon);
+            FillBuffer();
         }
 
         public override void _Process(float delta)
@@ -104,15 +105,23 @@ namespace OPLinGodot
             for (uint i = 0; i < toFill; i++)
             {
                 float foo = Buffer[i] / 32767f; // Convert from 16 bit signed integer audio to 32 bit signed float audio
-                Vector2 vector2 = Vector2Pool.Get();
-                vector2.Set(foo, foo);
-                AudioStreamGeneratorPlayback.PushFrame(vector2);
-                Vector2Pool.Return(vector2);
+                Vector2.Set(foo, foo);
+                AudioStreamGeneratorPlayback.PushFrame(Vector2);
             }
             return this;
         }
 
-        private short[] Buffer = new short[512];
+        private Vector2 Vector2 = new Vector2(0f, 0f);
+
+        private short[] Buffer = new short[70000];
+
+        public int BufferSize
+        {
+            get
+            {
+                return Buffer.Length;
+            }
+        }
 
         public ImfPacket[] Song
         {

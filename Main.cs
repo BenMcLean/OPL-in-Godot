@@ -2,21 +2,17 @@ using Godot;
 using NScumm.Core.Audio.OPL;
 using NScumm.Core.Audio.OPL.DosBox;
 using OPLinGodot;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using static OPL.Imf;
 
 public class Main : Control
 {
-    ImfPlayer ImfPlayer;
-
     public override void _Ready()
     {
         ImfPlayer ImfPlayer = new ImfPlayer()
         {
             Opl = new DosBoxOPL(OplType.Opl3),
             Song = ReadImf("WONDERIN_MUS.imf"),
+            //Song = ReadImf("GETAMMOSND.adl"),
             AudioStreamPlayer = new AudioStreamPlayer()
         };
         AddChild(ImfPlayer);
