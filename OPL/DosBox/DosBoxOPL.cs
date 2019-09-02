@@ -198,7 +198,10 @@ namespace NScumm.Core.Audio.OPL.DosBox
             _emulator.WriteReg(fullReg, val);
         }
 
-        public byte Read(int port)
+        /// <summary>
+        /// TODO: Fix this! It does not work!
+        /// </summary>
+        private byte Read(int port)
         {
             switch (_type)
             {

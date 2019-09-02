@@ -21,7 +21,7 @@ namespace OPLinGodot
             set
             {
                 if ((adl = value) != null && Opl != null)
-                    adl.Setup(Opl);
+                    Setup();
                 SinceLastNote = 0f;
                 CurrentNote = 0;
             }
@@ -41,12 +41,93 @@ namespace OPLinGodot
                     while (SinceLastNote >= Adl.Hz)
                     {
                         SinceLastNote -= Adl.Hz;
-                        Adl.PlayNote(Opl, Adl.Notes[CurrentNote]);
+                        PlayNote(Adl.Notes[CurrentNote]);
                     }
                 }
                 else
                     Adl = null;
             }
+        }
+
+        public AdlPlayer ResetOctave()
+        {
+            OctavePortSetting = Adl.KeyFlag;
+            return this;
+        }
+
+        public AdlPlayer NoteOn()
+        {
+            OctavePortSetting = (byte)(Adl.Block | Adl.KeyFlag);
+            return this;
+        }
+
+        public AdlPlayer NoteOff()
+        {
+            OctavePortSetting = Adl.Block;
+            return this;
+        }
+
+        public AdlPlayer Setup()
+        {
+            return SetOctave().SetInstrument();
+        }
+
+        public AdlPlayer SetOctave()
+        {
+            OctavePortSetting = (byte)(Adl.Block | OctavePortSetting);
+            return this;
+        }
+
+        public byte OctavePortSetting {
+            get
+            {
+                return octavePortSetting;
+            }
+            set
+            {
+                octavePortSetting = value;
+                Opl.WriteReg(Adl.OctavePort, value);
+            }
+        }
+        private byte octavePortSetting = 0;
+
+        public byte NotePortSetting
+        {
+            get
+            {
+                return notePortSetting;
+            }
+            set
+            {
+                notePortSetting = value;
+                Opl.WriteReg(Adl.NotePort, value);
+            }
+        }
+        private byte notePortSetting = 0;
+
+        public AdlPlayer SetInstrument()
+        {
+            for (uint i = 0; i < Adl.InstrumentPorts.Length; i++)
+                Opl.WriteReg(Adl.InstrumentPorts[i], Adl.Instrument[i]);
+            return this;
+        }
+
+        public AdlPlayer PlayNote(byte note)
+        {
+            if (note == 0)
+                NoteOff();
+            else if (NotePortSetting != note)
+            {
+                NotePortSetting = note;
+                if (!IsBitSet(OctavePortSetting, Adl.KeyFlag))
+                    NoteOn();
+            }
+            return this;
+        }
+
+        public static bool IsBitSet(byte bite, byte pos)
+        {
+            return (bite & (1 << pos)) != 0;
         }
     }
 }
