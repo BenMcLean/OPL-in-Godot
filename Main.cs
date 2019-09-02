@@ -8,8 +8,10 @@ using static OPL.Imf;
 
 public class Main : Control
 {
-    IOpl Opl = new DosBoxOPL(OplType.Opl3);
-    ImfPlayer ImfPlayer;
+    public static IOpl Opl = new DosBoxOPL(OplType.Opl3);
+    public static ImfPlayer ImfPlayer;
+    public static AdlPlayer AdlPlayer;
+    public static Adl Adl;
 
     public override void _Ready()
     {
@@ -23,32 +25,25 @@ public class Main : Control
         AddChild(ImfPlayer);
         AddChild(ImfPlayer.AudioStreamPlayer);
 
-        Button button = new PlayButton
-        {
-            Text = "Stop",
-            AudioStreamPlayer = ImfPlayer.AudioStreamPlayer
-        };
-        AddChild(button);
-
-        SongStep songStep = new SongStep
-        {
-            ImfPlayer = ImfPlayer
-        };
-        AddChild(songStep);
-
         using (FileStream file = new FileStream("GETAMMOSND.adl", FileMode.Open))
             Adl = new Adl(file);
 
         AdlPlayer = new AdlPlayer
         {
-            Opl = Opl
+            Opl = Opl,
+            Adl = Adl
         };
-        //adlPlayer.Adl = Adl;
         AddChild(AdlPlayer);
-    }
 
-    public AdlPlayer AdlPlayer;
-    public Adl Adl;
+        Button button = new PlayButton
+        {
+            Text = "Sound"
+        };
+        AddChild(button);
+
+        SongStep songStep = new SongStep();
+        AddChild(songStep);
+    }
 
     //public override void _Process(float delta)
     //{
@@ -57,28 +52,26 @@ public class Main : Control
 
     public class SongStep : Label
     {
-        public ImfPlayer ImfPlayer { get; set; }
-
         public override void _Process(float delta)
         {
             base._Process(delta);
-            Text = ImfPlayer.CurrentPacket.ToString();
+            //Text = ImfPlayer.CurrentPacket.ToString();
+            Text = AdlPlayer?.CurrentNote.ToString() ?? "null";
         }
     }
 
     public class PlayButton : Button
     {
-        public AudioStreamPlayer AudioStreamPlayer { get; set; }
-
         public override void _GuiInput(InputEvent @event)
         {
             base._GuiInput(@event);
             if (@event.IsPressed())
             {
-                if (AudioStreamPlayer.Playing = !AudioStreamPlayer.Playing)
-                    SetText("Stop");
-                else
-                    SetText("Play");
+                //if (AudioStreamPlayer.Playing = !AudioStreamPlayer.Playing)
+                //    SetText("Stop");
+                //else
+                //    SetText("Play");
+                Main.AdlPlayer.Adl = Adl;
             }
         }
     }

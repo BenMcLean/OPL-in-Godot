@@ -22,30 +22,30 @@ namespace OPLinGodot
             {
                 if ((adl = value) != null && Opl != null)
                     Setup();
+                else
+                    NoteOff();
                 SinceLastNote = 0f;
                 CurrentNote = 0;
             }
         }
         private Adl adl;
 
-        private uint CurrentNote = 0;
+        public uint CurrentNote = 0;
         private float SinceLastNote = 0f;
 
         public override void _Process(float delta)
         {
             if (Opl != null && Adl != null)
             {
-                if (CurrentNote < Adl.Notes.Length)
+                SinceLastNote += delta;
+                while (Adl != null && SinceLastNote >= Adl.Hz)
                 {
-                    SinceLastNote += delta;
-                    while (SinceLastNote >= Adl.Hz)
-                    {
-                        SinceLastNote -= Adl.Hz;
+                    SinceLastNote -= Adl.Hz;
+                    if (++CurrentNote < Adl.Notes.Length)
                         PlayNote(Adl.Notes[CurrentNote]);
-                    }
+                    else
+                        Adl = null;
                 }
-                else
-                    Adl = null;
             }
         }
 
@@ -63,13 +63,13 @@ namespace OPLinGodot
 
         public AdlPlayer NoteOff()
         {
-            OctavePortSetting = Adl.Block;
+            OctavePortSetting = Adl == null ? Adl.KeyFlag : Adl.Block;
             return this;
         }
 
         public AdlPlayer Setup()
         {
-            return SetOctave().SetInstrument();
+            return SetOctave().SetInstrument().NoteOn();
         }
 
         public AdlPlayer SetOctave()
