@@ -8,6 +8,7 @@ using static OPL.Imf;
 
 public class Main : Control
 {
+    IOpl Opl = new DosBoxOPL(OplType.Opl3);
     ImfPlayer ImfPlayer;
 
     public override void _Ready()
@@ -15,7 +16,7 @@ public class Main : Control
         using (FileStream file = new FileStream("WONDERIN_MUS.imf", FileMode.Open))
             ImfPlayer = new ImfPlayer()
             {
-                Opl = new DosBoxOPL(OplType.Opl3),
+                Opl = Opl,
                 Song = ReadImf(file),
                 AudioStreamPlayer = new AudioStreamPlayer()
             };
@@ -37,8 +38,16 @@ public class Main : Control
 
         using (FileStream file = new FileStream("GETAMMOSND.adl", FileMode.Open))
             Adl = new Adl(file);
+
+        AdlPlayer = new AdlPlayer
+        {
+            Opl = Opl
+        };
+        //adlPlayer.Adl = Adl;
+        AddChild(AdlPlayer);
     }
 
+    public AdlPlayer AdlPlayer;
     public Adl Adl;
 
     //public override void _Process(float delta)

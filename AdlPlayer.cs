@@ -8,7 +8,7 @@ namespace OPLinGodot
     /// Plays Adlib sound effects in Godot.
     /// This class does not "own" the emulated sound card. It is only responsible for adding sound effects, not collecting output.
     /// </summary>
-    class AdlPlayer : Node
+    public class AdlPlayer : Node
     {
         public IOpl Opl { get; set; }
 
@@ -33,14 +33,19 @@ namespace OPLinGodot
 
         public override void _Process(float delta)
         {
-            if (Opl != null && Adl != null && CurrentNote < Adl.Notes.Length)
+            if (Opl != null && Adl != null)
             {
-                SinceLastNote += delta;
-                while (SinceLastNote >= Adl.Hz)
+                if (CurrentNote < Adl.Notes.Length)
                 {
-                    SinceLastNote -= Adl.Hz;
-                    Adl.PlayNote(Opl, Adl.Notes[CurrentNote]);
+                    SinceLastNote += delta;
+                    while (SinceLastNote >= Adl.Hz)
+                    {
+                        SinceLastNote -= Adl.Hz;
+                        Adl.PlayNote(Opl, Adl.Notes[CurrentNote]);
+                    }
                 }
+                else
+                    Adl = null;
             }
         }
     }
