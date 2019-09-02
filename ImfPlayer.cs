@@ -143,11 +143,6 @@ namespace OPLinGodot
         }
         private ImfPacket[] song;
 
-        public static float Delay(ushort time)
-        {
-            return time / 700f; // Wolf3D song notes happen at 700 hz.
-        }
-
         private float CurrentPacketDelay = 0f;
 
         public uint CurrentPacket { get; set; } = 0;

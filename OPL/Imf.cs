@@ -45,7 +45,16 @@ namespace OPL
         }
 
         /// <summary>
-        /// Reading in IMF files based on http://www.shikadi.net/moddingwiki/IMF_Format
+        /// Wolf3D song notes happen at 700 hz.
+        /// </summary>
+        /// <param name="time">Delay value read from IMF</param>
+        public static float Delay(ushort time)
+        {
+            return time / 700f;
+        }
+
+        /// <summary>
+        /// Parsing IMF files based on http://www.shikadi.net/moddingwiki/IMF_Format
         /// </summary>
         public static ImfPacket[] ReadImf(Stream stream)
         {

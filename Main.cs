@@ -35,7 +35,6 @@ public class Main : Control
         };
         AddChild(songStep);
 
-
         using (FileStream file = new FileStream("GETAMMOSND.adl", FileMode.Open))
             Adl = new Adl(file);
     }

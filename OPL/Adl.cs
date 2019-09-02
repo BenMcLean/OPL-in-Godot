@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using NScumm.Core.Audio.OPL;
+using System.IO;
 
 namespace OPL
 {
@@ -33,6 +34,72 @@ namespace OPL
             stream.Read(Notes, 0, Notes.Length);
         }
 
+        public byte Block
+        {
+            get
+            {
+                return (byte)((Octave & 7) << 2);
+            }
+        }
+
+        public static readonly byte KeyFlag = 0x20;
+
+        public Adl ResetOctave(IOpl opl)
+        {
+            opl.WriteReg(OctavePort, KeyFlag);
+            return this;
+        }
+
+        public Adl NoteOn(IOpl opl)
+        {
+            opl.WriteReg(OctavePort, Block | KeyFlag);
+            return this;
+        }
+
+        public Adl NoteOff(IOpl opl)
+        {
+            opl.WriteReg(OctavePort, Block);
+            return this;
+        }
+
+        public Adl Setup(IOpl opl)
+        {
+            return SetOctave(opl).SetInstrument(opl);
+        }
+
+        public Adl SetOctave(IOpl opl)
+        {
+            opl.WriteReg(OctavePort, Block | opl.Read(OctavePort));
+            return this;
+        }
+
+        public Adl SetInstrument(IOpl opl)
+        {
+            for (uint i = 0; i < InstrumentPorts.Length; i++)
+                opl.WriteReg(InstrumentPorts[i], Instrument[i]);
+            return this;
+        }
+
+        public void PlayNote(IOpl opl, byte note)
+        {
+            if (note == 0)
+                NoteOff(opl);
+            else if (opl.Read(NotePort) != note)
+            {
+                opl.WriteReg(NotePort, note);
+                if (!IsBitSet(opl.Read(OctavePort), KeyFlag))
+                    NoteOn(opl);
+            }
+        }
+
+        public static bool IsBitSet(byte bite, byte pos)
+        {
+            return (bite & (1 << pos)) != 0;
+        }
+
+        public static readonly float Hz = 1f / 140f; // These sound effects play back at 140 Hz.
+
+        public static readonly byte NotePort = 0xA0;
         public static readonly byte OctavePort = 0xB0;
 
         public static readonly byte[] InstrumentPorts = new byte[]
