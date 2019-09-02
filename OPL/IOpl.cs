@@ -32,6 +32,8 @@ namespace NScumm.Core.Audio.OPL
 
         void ReadBuffer(short[] buffer, int pos, int length);
 
+        byte Read(int port);
+
         bool IsStereo { get; }
     }
 }

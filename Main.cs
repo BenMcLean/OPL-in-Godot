@@ -1,6 +1,7 @@
 using Godot;
 using NScumm.Core.Audio.OPL;
 using NScumm.Core.Audio.OPL.DosBox;
+using OPL;
 using OPLinGodot;
 using System.IO;
 using static OPL.Imf;
@@ -33,7 +34,13 @@ public class Main : Control
             ImfPlayer = ImfPlayer
         };
         AddChild(songStep);
+
+
+        using (FileStream file = new FileStream("GETAMMOSND.adl", FileMode.Open))
+            Adl = new Adl(file);
     }
+
+    public Adl Adl;
 
     //public override void _Process(float delta)
     //{

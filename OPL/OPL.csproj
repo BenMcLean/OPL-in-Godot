@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adl.cs" />
     <Compile Include="DosBox\DosBoxOPL.cs" />
     <Compile Include="DosBox\DosBoxOPL_Channel.cs" />
     <Compile Include="DosBox\DosBoxOPL_Chip.cs" />

@@ -4,6 +4,10 @@ using static OPL.Imf;
 
 namespace OPLinGodot
 {
+    /// <summary>
+    /// Plays back IMF songs in Godot.
+    /// This class is assumed to "own" the emulated sound card since it is responsible both for music data input and for sound output.
+    /// </summary>
     public class ImfPlayer : Node
     {
         public IOpl Opl { get; set; }
