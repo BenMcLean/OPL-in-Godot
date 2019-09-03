@@ -28,9 +28,10 @@ namespace OPL
         /// <param name="notes">How many notes to read in, or 0 to read till end of stream</param>
         public Adl(Stream stream, uint notes = 0)
         {
+            //stream.Seek(7, 0);
             stream.Read(Instrument, 0, Instrument.Length);
             Octave = (byte)stream.ReadByte();
-            Notes = new byte[notes == 0 ? stream.Length - stream.Position : notes];
+            Notes = new byte[notes == 0 ? stream.Length - stream.Position: notes];
             stream.Read(Notes, 0, Notes.Length);
         }
 

@@ -20,18 +20,22 @@ public class Main : Control
             {
                 Opl = Opl,
                 Song = ReadImf(file),
-                AudioStreamPlayer = new AudioStreamPlayer()
+                AudioStreamPlayer = new AudioStreamPlayer(),
+                Music = true
             };
         AddChild(ImfPlayer);
         AddChild(ImfPlayer.AudioStreamPlayer);
 
-        using (FileStream file = new FileStream("GETAMMOSND.adl", FileMode.Open))
+        using (FileStream file = new FileStream(
+            "GETAMMOSND.adl"
+            //"GETMACHINESND.adl"
+            , FileMode.Open))
             Adl = new Adl(file);
 
         AdlPlayer = new AdlPlayer
         {
             Opl = Opl,
-            Adl = Adl
+            //Adl = Adl
         };
         AddChild(AdlPlayer);
 

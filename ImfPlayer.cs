@@ -12,6 +12,7 @@ namespace OPLinGodot
     {
         public IOpl Opl { get; set; }
 
+        public bool Music { get; set; } = true;
         public bool Loop { get; set; } = true;
 
         private AudioStreamPlayer audioStreamPlayer;
@@ -60,7 +61,7 @@ namespace OPLinGodot
         {
             base._Process(delta);
             // Input
-            if (AudioStreamPlayer.Playing)
+            if (AudioStreamPlayer.Playing && Music)
                 PlayNotes(delta);
             // Output
             FillBuffer();

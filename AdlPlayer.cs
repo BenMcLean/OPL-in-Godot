@@ -42,7 +42,7 @@ namespace OPLinGodot
                 {
                     SinceLastNote -= Adl.Hz;
                     if (++CurrentNote < Adl.Notes.Length)
-                        PlayNote(Adl.Notes[CurrentNote]);
+                        PlayNote((byte)(Adl.Notes[CurrentNote]));
                     else
                         Adl = null;
                 }
