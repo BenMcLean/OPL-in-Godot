@@ -42,7 +42,7 @@ namespace OPLinGodot
                 {
                     SinceLastNote -= Adl.Hz;
                     if (++CurrentNote < Adl.Notes.Length)
-                        PlayNote((byte)(Adl.Notes[CurrentNote]));
+                        PlayNote();
                     else
                         Adl = null;
                 }
@@ -78,7 +78,8 @@ namespace OPLinGodot
             return this;
         }
 
-        public byte OctavePortSetting {
+        public byte OctavePortSetting
+        {
             get
             {
                 return octavePortSetting;
@@ -112,15 +113,16 @@ namespace OPLinGodot
             return this;
         }
 
-        public AdlPlayer PlayNote(byte note)
+        public AdlPlayer PlayNote()
         {
-            if (note == 0)
+            if (CurrentNote > 0 && Adl.Notes[CurrentNote] == Adl.Notes[CurrentNote - 1])
+                return this;
+            if (Adl.Notes[CurrentNote] == 0)
                 NoteOff();
-            else if (NotePortSetting != note)
+            else
             {
-                NotePortSetting = note;
-                if (!IsBitSet(OctavePortSetting, Adl.KeyFlag))
-                    NoteOn();
+                NotePortSetting = Adl.Notes[CurrentNote];
+                NoteOn();
             }
             return this;
         }
