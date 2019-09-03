@@ -41,10 +41,7 @@ namespace OPLinGodot
                 while (Adl != null && SinceLastNote >= Adl.Hz)
                 {
                     SinceLastNote -= Adl.Hz;
-                    if (++CurrentNote < Adl.Notes.Length)
-                        PlayNote();
-                    else
-                        Adl = null;
+                    PlayNote();
                 }
             }
         }
@@ -69,7 +66,7 @@ namespace OPLinGodot
 
         public AdlPlayer Setup()
         {
-            return SetInstrument().NoteOn();
+            return SetInstrument().NoteOn().PlayNote();
         }
 
         public AdlPlayer SetOctave()
@@ -115,16 +112,20 @@ namespace OPLinGodot
 
         public AdlPlayer PlayNote()
         {
-            if (CurrentNote > 0 && Adl.Notes[CurrentNote] == Adl.Notes[CurrentNote - 1])
-                return this;
-            if (Adl.Notes[CurrentNote] == 0)
-                NoteOff();
-            else
+            if (CurrentNote == 0 || Adl.Notes[CurrentNote] != Adl.Notes[CurrentNote - 1])
             {
-                NotePort = Adl.Notes[CurrentNote];
-                NoteOn();
-                SetOctave();
+                if (Adl.Notes[CurrentNote] == 0)
+                    NoteOff();
+                else
+                {
+                    NotePort = Adl.Notes[CurrentNote];
+                    NoteOn();
+                    SetOctave();
+                }
             }
+            CurrentNote++;
+            if (CurrentNote >= Adl.Notes.Length)
+                Adl = null;
             return this;
         }
 
