@@ -51,60 +51,60 @@ namespace OPLinGodot
 
         public AdlPlayer ResetOctave()
         {
-            OctavePortSetting = Adl.KeyFlag;
+            OctavePort = Adl.KeyFlag;
             return this;
         }
 
         public AdlPlayer NoteOn()
         {
-            OctavePortSetting = (byte)(Adl.Block | Adl.KeyFlag);
+            OctavePort = (byte)(Adl.KeyFlag | OctavePort);
             return this;
         }
 
         public AdlPlayer NoteOff()
         {
-            OctavePortSetting = Adl == null ? Adl.KeyFlag : Adl.Block;
+            OctavePort = 0;
             return this;
         }
 
         public AdlPlayer Setup()
         {
-            return SetOctave().SetInstrument().NoteOn();
+            return SetInstrument().NoteOn();
         }
 
         public AdlPlayer SetOctave()
         {
-            OctavePortSetting = (byte)(Adl.Block | OctavePortSetting);
+            OctavePort = (byte)(Adl.Block | OctavePort);
             return this;
         }
 
-        public byte OctavePortSetting
+        public byte OctavePort
         {
             get
             {
-                return octavePortSetting;
+                return octavePort;
             }
             set
             {
-                octavePortSetting = value;
+                octavePort = value;
                 Opl.WriteReg(Adl.OctavePort, value);
             }
         }
-        private byte octavePortSetting = 0;
+        private byte octavePort = 0;
 
-        public byte NotePortSetting
+        public byte NotePort
         {
             get
             {
-                return notePortSetting;
+                return notePort;
             }
             set
             {
-                notePortSetting = value;
+                notePort = value;
                 Opl.WriteReg(Adl.NotePort, value);
             }
         }
-        private byte notePortSetting = 0;
+        private byte notePort = 0;
 
         public AdlPlayer SetInstrument()
         {
@@ -121,8 +121,9 @@ namespace OPLinGodot
                 NoteOff();
             else
             {
-                NotePortSetting = Adl.Notes[CurrentNote];
+                NotePort = Adl.Notes[CurrentNote];
                 NoteOn();
+                SetOctave();
             }
             return this;
         }
