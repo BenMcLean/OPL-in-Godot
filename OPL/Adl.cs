@@ -24,15 +24,20 @@ namespace OPL
         /// Pitch data
         /// </summary>
         public byte[] Notes;
+        public ushort Priority;
 
         /// <param name="notes">How many notes to read in, or 0 to read till end of stream</param>
-        public Adl(Stream stream, uint notes = 0)
+        public Adl(Stream stream)
         {
-            //stream.Seek(7, 0);
-            stream.Read(Instrument, 0, Instrument.Length);
-            Octave = (byte)stream.ReadByte();
-            Notes = new byte[notes == 0 ? stream.Length - stream.Position: notes];
-            stream.Read(Notes, 0, Notes.Length);
+            using (BinaryReader binaryReader = new BinaryReader(stream))
+            {
+                uint length = binaryReader.ReadUInt32();
+                Priority = binaryReader.ReadUInt16();
+                binaryReader.Read(Instrument, 0, Instrument.Length);
+                Octave = binaryReader.ReadByte();
+                Notes = new byte[length];
+                stream.Read(Notes, 0, Notes.Length);
+            }
         }
 
         public byte Block
