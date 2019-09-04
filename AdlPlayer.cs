@@ -11,6 +11,8 @@ namespace OPLinGodot
     public class AdlPlayer : Node
     {
         public IOpl Opl;
+        public uint CurrentNote = 0;
+        private float SinceLastNote = 0f;
 
         public Adl Adl
         {
@@ -32,9 +34,6 @@ namespace OPLinGodot
             }
         }
         private Adl adl;
-
-        public uint CurrentNote = 0;
-        private float SinceLastNote = 0f;
 
         public override void _Process(float delta)
         {
@@ -63,7 +62,7 @@ namespace OPLinGodot
 
         public AdlPlayer Setup()
         {
-            return SetInstrument().NoteOn().PlayNote();
+            return SetInstrument().PlayNote();
         }
 
         public AdlPlayer SetInstrument()
@@ -89,11 +88,6 @@ namespace OPLinGodot
             if (CurrentNote >= Adl.Notes.Length)
                 Adl = null;
             return this;
-        }
-
-        public static bool IsBitSet(byte bite, byte pos)
-        {
-            return (bite & (1 << pos)) != 0;
         }
     }
 }

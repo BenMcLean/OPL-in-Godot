@@ -53,7 +53,6 @@ namespace OPLinGodot
             base._Ready();
             Opl.Init((int)AudioStreamGenerator.MixRate);
             AudioStreamPlayer.Play();
-            PlayNotes(float.Epsilon);
             FillBuffer();
         }
 
@@ -61,7 +60,7 @@ namespace OPLinGodot
         {
             base._Process(delta);
             // Input
-            if (AudioStreamPlayer.Playing && Music)
+            if (AudioStreamPlayer.Playing && Music && Song != null)
                 PlayNotes(delta);
             // Output
             FillBuffer();
@@ -86,8 +85,8 @@ namespace OPLinGodot
                         Delay(Song[CurrentPacket].Delay)
                         : 0;
                 }
-                if (Loop && CurrentPacket >= Song.Length)
-                    Song = Song;
+                if (CurrentPacket >= Song.Length)
+                    Song = Music && Loop ? Song : null;
             }
             return this;
         }
@@ -137,8 +136,8 @@ namespace OPLinGodot
             set
             {
                 song = value;
-                CurrentPacket = 0;
-                CurrentPacketDelay = Delay(song[CurrentPacket].Delay);
+                CurrentPacket = -1;
+                CurrentPacketDelay = 0f;
                 TimeSinceLastPacket = 0f;
             }
         }
@@ -146,7 +145,7 @@ namespace OPLinGodot
 
         private float CurrentPacketDelay = 0f;
 
-        public uint CurrentPacket { get; set; } = 0;
+        public int CurrentPacket { get; set; } = 0;
 
         public float TimeSinceLastPacket { get; set; } = 0f;
     }

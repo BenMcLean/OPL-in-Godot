@@ -12,17 +12,19 @@ public class Main : Control
     public static ImfPlayer ImfPlayer;
     public static AdlPlayer AdlPlayer;
     public static Adl Adl;
+    public static ImfPacket[] Song;
 
     public override void _Ready()
     {
         using (FileStream file = new FileStream("WONDERIN_MUS.imf", FileMode.Open))
-            ImfPlayer = new ImfPlayer()
-            {
-                Opl = Opl,
-                Song = ReadImf(file),
-                AudioStreamPlayer = new AudioStreamPlayer(),
-                Music = true,
-            };
+            Song = ReadImf(file);
+        ImfPlayer = new ImfPlayer()
+        {
+            Opl = Opl,
+            Song = Song,
+            AudioStreamPlayer = new AudioStreamPlayer(),
+            Music = true,
+        };
         AddChild(ImfPlayer);
         AddChild(ImfPlayer.AudioStreamPlayer);
 
@@ -75,6 +77,11 @@ public class Main : Control
                 //    SetText("Stop");
                 //else
                 //    SetText("Play");
+                //if (Main.ImfPlayer.Song == null)
+                //    Main.ImfPlayer.Song = Imf;
+                //else
+                //    Main.ImfPlayer.Song = null;
+
                 Main.AdlPlayer.Adl = Adl;
             }
         }
