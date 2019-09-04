@@ -10,7 +10,7 @@ namespace OPLinGodot
     /// </summary>
     public class AdlPlayer : Node
     {
-        public IOpl Opl { get; set; }
+        public IOpl Opl;
 
         public Adl Adl
         {
@@ -20,12 +20,15 @@ namespace OPLinGodot
             }
             set
             {
-                if ((adl = value) != null && Opl != null)
-                    Setup();
-                else
-                    NoteOff();
                 SinceLastNote = 0f;
                 CurrentNote = 0;
+                if (Opl != null)
+                {
+                    if ((adl = value) != null)
+                        Setup();
+                    else
+                        NoteOff();
+                }
             }
         }
         private Adl adl;
@@ -46,21 +49,15 @@ namespace OPLinGodot
             }
         }
 
-        public AdlPlayer ResetOctave()
-        {
-            OctavePort = Adl.KeyFlag;
-            return this;
-        }
-
         public AdlPlayer NoteOn()
         {
-            OctavePort = (byte)(Adl.KeyFlag | OctavePort);
+            Opl.WriteReg(Adl.OctavePort, (byte)(Adl.Block | Adl.KeyFlag));
             return this;
         }
 
         public AdlPlayer NoteOff()
         {
-            OctavePort = 0;
+            Opl.WriteReg(Adl.OctavePort, 0);
             return this;
         }
 
@@ -68,40 +65,6 @@ namespace OPLinGodot
         {
             return SetInstrument().NoteOn().PlayNote();
         }
-
-        public AdlPlayer SetOctave()
-        {
-            OctavePort = (byte)(Adl.Block | OctavePort);
-            return this;
-        }
-
-        public byte OctavePort
-        {
-            get
-            {
-                return octavePort;
-            }
-            set
-            {
-                octavePort = value;
-                Opl.WriteReg(Adl.OctavePort, value);
-            }
-        }
-        private byte octavePort = 0;
-
-        public byte NotePort
-        {
-            get
-            {
-                return notePort;
-            }
-            set
-            {
-                notePort = value;
-                Opl.WriteReg(Adl.NotePort, value);
-            }
-        }
-        private byte notePort = 0;
 
         public AdlPlayer SetInstrument()
         {
@@ -118,9 +81,8 @@ namespace OPLinGodot
                     NoteOff();
                 else
                 {
-                    NotePort = Adl.Notes[CurrentNote];
+                    Opl.WriteReg(Adl.NotePort, Adl.Notes[CurrentNote]);
                     NoteOn();
-                    SetOctave();
                 }
             }
             CurrentNote++;

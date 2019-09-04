@@ -21,7 +21,7 @@ public class Main : Control
                 Opl = Opl,
                 Song = ReadImf(file),
                 AudioStreamPlayer = new AudioStreamPlayer(),
-                Music = true
+                Music = true,
             };
         AddChild(ImfPlayer);
         AddChild(ImfPlayer.AudioStreamPlayer);
