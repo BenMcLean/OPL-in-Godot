@@ -3,12 +3,16 @@ using NScumm.Core.Audio.OPL;
 using NScumm.Core.Audio.OPL.DosBox;
 using OPL;
 using OPLinGodot;
+using SimpleLogger;
+using SimpleLogger.Logging.Handlers;
 using System.IO;
 using static OPL.Imf;
 
 public class Main : Control
 {
-    public static IOpl Opl = new DosBoxOPL(OplType.Opl3);
+    public static IOpl Opl = //new OplLogger(
+        new DosBoxOPL(OplType.Opl3);
+    //);
     public static ImfPlayer ImfPlayer;
     public static AdlPlayer AdlPlayer;
     public static Adl Adl;
@@ -16,6 +20,12 @@ public class Main : Control
 
     public override void _Ready()
     {
+        // Adding handler - to show log messages (ILoggerHandler)
+        Logger.LoggerHandlerManager
+            .AddHandler(new ConsoleLoggerHandler())
+            .AddHandler(new FileLoggerHandler())
+            .AddHandler(new DebugConsoleLoggerHandler());
+
         using (FileStream file = new FileStream("WONDERIN_MUS.imf", FileMode.Open))
             Song = ReadImf(file);
         ImfPlayer = new ImfPlayer()

@@ -52,7 +52,13 @@
     <Compile Include="DosBox\OplTimer.cs" />
     <Compile Include="Imf.cs" />
     <Compile Include="IOpl.cs" />
+    <Compile Include="OplLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SimpleLogger">
+      <Version>1.0.0</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
