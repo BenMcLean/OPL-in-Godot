@@ -27,9 +27,9 @@ namespace OPLinGodot
                 if (Opl != null)
                 {
                     if ((adl = value) != null)
-                        Setup();
+                        SetInstrument().PlayNote();
                     else
-                        NoteOff();
+                        Note = false;
                 }
             }
         }
@@ -48,22 +48,21 @@ namespace OPLinGodot
             }
         }
 
-        public AdlPlayer NoteOn()
+        public bool Note
         {
-            Opl.WriteReg(Adl.OctavePort, (byte)(Adl.Block | Adl.KeyFlag));
-            return this;
+            get
+            {
+                return note;
+            }
+            set
+            {
+                if (note = value)
+                    Opl.WriteReg(Adl.OctavePort, (byte)(Adl.Block | Adl.KeyFlag));
+                else
+                    Opl.WriteReg(Adl.OctavePort, 0);
+            }
         }
-
-        public AdlPlayer NoteOff()
-        {
-            Opl.WriteReg(Adl.OctavePort, 0);
-            return this;
-        }
-
-        public AdlPlayer Setup()
-        {
-            return SetInstrument().PlayNote();
-        }
+        private bool note = false;
 
         public AdlPlayer SetInstrument()
         {
@@ -74,15 +73,12 @@ namespace OPLinGodot
 
         public AdlPlayer PlayNote()
         {
-            if (CurrentNote == 0 || Adl.Notes[CurrentNote] != Adl.Notes[CurrentNote - 1])
+            if (Adl.Notes[CurrentNote] == 0)
+                Note = false;
+            else
             {
-                if (Adl.Notes[CurrentNote] == 0)
-                    NoteOff();
-                else
-                {
-                    Opl.WriteReg(Adl.NotePort, Adl.Notes[CurrentNote]);
-                    NoteOn();
-                }
+                if (!Note) Note = true;
+                Opl.WriteReg(Adl.NotePort, Adl.Notes[CurrentNote]);
             }
             CurrentNote++;
             if (CurrentNote >= Adl.Notes.Length)
