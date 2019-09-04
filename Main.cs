@@ -8,13 +8,17 @@ using static OPL.Imf;
 
 public class Main : Control
 {
-    public static IOpl Opl = new DosBoxOPL(OplType.Opl3);
+    public static readonly float MixRate = 44000f;
+    public static IOpl Opl;
     public static ImfPlayer ImfPlayer;
     public static AdlPlayer AdlPlayer;
     public static Adl Adl;
 
     public override void _Ready()
     {
+        Opl = new DosBoxOPL(OplType.Opl3);
+        Opl.Init((int)MixRate);
+
         using (FileStream file = new FileStream("WONDERIN_MUS.imf", FileMode.Open))
             ImfPlayer = new ImfPlayer()
             {

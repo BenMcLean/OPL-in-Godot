@@ -48,7 +48,7 @@ namespace OPL
             }
         }
 
-        public static readonly byte KeyFlag = 0x20;
+        public static readonly byte KeyOnFlag = 0x20;
 
         public static readonly float Hz = 1f / 140f; // These sound effects play back at 140 Hz.
 
