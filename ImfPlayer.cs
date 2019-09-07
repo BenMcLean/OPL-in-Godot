@@ -52,6 +52,7 @@ namespace OPLinGodot
         {
             base._Ready();
             Opl.Init((int)AudioStreamGenerator.MixRate);
+            Opl.WriteReg(1, 0x20); // Enable different wave type selections
             AudioStreamPlayer.Play();
             FillBuffer();
         }
