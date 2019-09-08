@@ -30,10 +30,7 @@ public class Main : Control
         using (FileStream file = new FileStream("WONDERIN_MUS.imf", FileMode.Open))
             Song = ReadImf(file);
 
-        OplPlayer = new OplPlayer(Opl)
-        {
-            AudioStreamPlayer = new AudioStreamPlayer(),
-        };
+        OplPlayer = new OplPlayer(Opl);
         AddChild(OplPlayer);
         AddChild(OplPlayer.AudioStreamPlayer);
 

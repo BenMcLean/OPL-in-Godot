@@ -13,13 +13,14 @@ namespace OPLinGodot
         public IOpl Opl { get; set; }
 
         private AudioStreamPlayer audioStreamPlayer;
+
         public AudioStreamPlayer AudioStreamPlayer
         {
             get
             {
                 return audioStreamPlayer;
             }
-            set
+            private set
             {
                 audioStreamPlayer = value;
                 value.Stream = new AudioStreamGenerator()
@@ -49,6 +50,7 @@ namespace OPLinGodot
         public override void _Ready()
         {
             base._Ready();
+            AudioStreamPlayer = new AudioStreamPlayer();
             Opl.Init((int)AudioStreamGenerator.MixRate);
             AudioStreamPlayer.Play();
             FillBuffer();
