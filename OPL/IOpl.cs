@@ -35,3 +35,4 @@ namespace NScumm.Core.Audio.OPL
         bool IsStereo { get; }
     }
 }
+

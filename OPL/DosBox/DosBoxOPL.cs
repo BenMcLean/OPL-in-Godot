@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;
 
 namespace NScumm.Core.Audio.OPL.DosBox
 {
-    public partial class DosBoxOPL : IOpl
+    public partial class DosBoxOPL: IOpl
     {
         [StructLayout(LayoutKind.Explicit)]
         struct Reg
@@ -198,9 +198,6 @@ namespace NScumm.Core.Audio.OPL.DosBox
             _emulator.WriteReg(fullReg, val);
         }
 
-        /// <summary>
-        /// TODO: Fix this! It does not work!
-        /// </summary>
         private byte Read(int port)
         {
             switch (_type)
@@ -299,7 +296,7 @@ namespace NScumm.Core.Audio.OPL.DosBox
             if (doneTables)
                 return;
             doneTables = true;
-#if (DBOPL_WAVE_EQUALS_WAVE_HANDLER) || (DBOPL_WAVE_EQUALS_WAVE_TABLELOG)
+            #if ( DBOPL_WAVE_EQUALS_WAVE_HANDLER ) || ( DBOPL_WAVE_EQUALS_WAVE_TABLELOG )
             //Exponential volume table, same as the real adlib
             for (int i = 0; i < 256; i++)
             {
@@ -309,16 +306,16 @@ namespace NScumm.Core.Audio.OPL.DosBox
                 //Preshift to the left once so the final volume can shift to the right
                 ExpTable[i] *= 2;
             }
-#endif
-#if (DBOPL_WAVE_EQUALS_WAVE_HANDLER)
+            #endif
+            #if ( DBOPL_WAVE_EQUALS_WAVE_HANDLER )
             //Add 0.5 for the trunc rounding of the integer cast
             //Do a PI sinetable instead of the original 0.5 PI
             for (int i = 0; i < 512; i++)
             {
                 SinTable[i] = (ushort)(0.5 - Math.Log10(Math.Sin((i + 0.5) * (Math.PI / 512.0))) / Math.Log10(2.0) * 256);
             }
-#endif
-#if DBOPL_WAVE_EQUALS_WAVE_TABLEMUL
+            #endif
+            #if DBOPL_WAVE_EQUALS_WAVE_TABLEMUL
             //Multiplication based tables
             for (var i = 0; i < 384; i++)
             {
@@ -340,8 +337,8 @@ namespace NScumm.Core.Audio.OPL.DosBox
                 waveTable[0x700 + i] = (short)(0.5 + (Math.Pow(2.0, -1.0 + (255 - i * 8) * (1.0 / 256))) * 4085);
                 waveTable[0x6ff - i] = (short)-waveTable[0x700 + i];
             }
-#endif
-#if (DBOPL_WAVE_EQUALS_WAVE_TABLELOG)
+            #endif
+            #if ( DBOPL_WAVE_EQUALS_WAVE_TABLELOG )
             //Sine Wave Base
             for (int i = 0; i < 512; i++)
             {
@@ -354,13 +351,13 @@ namespace NScumm.Core.Audio.OPL.DosBox
                 WaveTable[0x700 + i] = (short)(i * 8);
                 WaveTable[0x6ff - i] = (short)unchecked(((short)0x8000) | i * 8);
             }
-#endif
+            #endif
 
             //  |    |//\\|____|WAV7|//__|/\  |____|/\/\|
             //  |\\//|    |    |WAV7|    |  \/|    |    |
             //  |06  |0126|27  |7   |3   |4   |4 5 |5   |
 
-#if ((DBOPL_WAVE_EQUALS_WAVE_TABLELOG) || (DBOPL_WAVE_EQUALS_WAVE_TABLEMUL))
+            #if (( DBOPL_WAVE_EQUALS_WAVE_TABLELOG ) || ( DBOPL_WAVE_EQUALS_WAVE_TABLEMUL ))
             for (int i = 0; i < 256; i++)
             {
                 //Fill silence gaps
@@ -377,7 +374,7 @@ namespace NScumm.Core.Audio.OPL.DosBox
                 waveTable[0xe00 + i] = waveTable[0x200 + i * 2];
                 waveTable[0xf00 + i] = waveTable[0x200 + i * 2];
             }
-#endif
+            #endif
 
             //Create the ksl table
             for (int oct = 0; oct < 8; oct++)
@@ -416,7 +413,7 @@ namespace NScumm.Core.Audio.OPL.DosBox
                 //Add back the bits for highest ones
                 if (i >= 16)
                     index += 9;
-                chanOffsetTable[i] = new Func<Chip, Channel>(c => c.Channels[index]);
+                chanOffsetTable[i] = new Func<Chip,Channel>(c => c.Channels[index]);
             }
             //Same for operators
             for (var i = 0; i < 64; i++)
@@ -435,7 +432,7 @@ namespace NScumm.Core.Audio.OPL.DosBox
                 if (chNum >= 18)
                     continue;
 
-                opOffsetTable[i] = new Func<Chip, Operator>(c => chanOffsetTable[chNum](c).Ops[opNum]);
+                opOffsetTable[i] = new Func<Chip,Operator>(c => chanOffsetTable[chNum](c).Ops[opNum]);
             }
         }
 
@@ -447,3 +444,4 @@ namespace NScumm.Core.Audio.OPL.DosBox
         Reg _reg;
     }
 }
+
