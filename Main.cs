@@ -13,6 +13,7 @@ public class Main : Control
     public static IOpl Opl = //new OplLogger(
         new DosBoxOPL(OplType.Opl3);
     //);
+    public static OplPlayer OplPlayer;
     public static ImfPlayer ImfPlayer;
     public static AdlPlayer AdlPlayer;
     public static Adl Adl;
@@ -28,15 +29,19 @@ public class Main : Control
 
         using (FileStream file = new FileStream("WONDERIN_MUS.imf", FileMode.Open))
             Song = ReadImf(file);
-        ImfPlayer = new ImfPlayer()
+
+        OplPlayer = new OplPlayer(Opl)
         {
-            Opl = Opl,
-            Song = Song,
             AudioStreamPlayer = new AudioStreamPlayer(),
-            Music = true,
+        };
+        AddChild(OplPlayer);
+        AddChild(OplPlayer.AudioStreamPlayer);
+
+        ImfPlayer = new ImfPlayer(Opl)
+        {
+            Song = Song,
         };
         AddChild(ImfPlayer);
-        AddChild(ImfPlayer.AudioStreamPlayer);
 
         using (FileStream file = new FileStream(
             "GETAMMOSND.adl"
@@ -44,11 +49,7 @@ public class Main : Control
             , FileMode.Open))
             Adl = new Adl(file);
 
-        AdlPlayer = new AdlPlayer
-        {
-            Opl = Opl,
-            //Adl = Adl
-        };
+        AdlPlayer = new AdlPlayer(Opl);
         AddChild(AdlPlayer);
 
         Button button = new PlayButton

@@ -6,11 +6,16 @@ namespace OPLinGodot
 {
     /// <summary>
     /// Plays Adlib sound effects in Godot.
-    /// This class does not "own" the emulated sound card. It is only responsible for adding sound effects, not collecting output.
     /// </summary>
     public class AdlPlayer : Node
     {
-        public IOpl Opl;
+        public AdlPlayer(IOpl Opl)
+        {
+            this.Opl = Opl;
+        }
+
+        public IOpl Opl { get; set; }
+        public bool Mute { get; set; } = false;
         public uint CurrentNote = 0;
         private float SinceLastNote = 0f;
 
@@ -22,7 +27,7 @@ namespace OPLinGodot
             }
             set
             {
-                if (adl == null || value == null || value.Priority >= adl.Priority)
+                if (!Mute && (adl == null || value == null || value.Priority >= adl.Priority))
                 {
                     SinceLastNote = 0f;
                     CurrentNote = 0;
@@ -37,6 +42,12 @@ namespace OPLinGodot
             }
         }
         private Adl adl;
+
+        public override void _Ready()
+        {
+            base._Ready();
+            Opl.WriteReg(1, 0x20); // Enable different wave type selections
+        }
 
         public override void _PhysicsProcess(float delta)
         {
@@ -71,7 +82,7 @@ namespace OPLinGodot
         {
             for (uint i = 0; i < Adl.InstrumentPorts.Length; i++)
                 Opl.WriteReg(Adl.InstrumentPorts[i], Adl.Instrument[i]);
-            Opl.WriteReg(0xC0, 0); // Wolf3D's code ignores this value in its sound data, setting it to zero instead.
+            Opl.WriteReg(0xC0, 0); // Wolf3D's code ignores this value in its sound data, always setting it to zero instead.
             return this;
         }
 

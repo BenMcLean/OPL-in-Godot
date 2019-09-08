@@ -52,6 +52,7 @@
     <Compile Include="AdlPlayer.cs" />
     <Compile Include="ImfPlayer.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="OplPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tone.cs" />
   </ItemGroup>

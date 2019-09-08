@@ -27,16 +27,13 @@ namespace OPL
             /// How much to wait.
             /// </summary>
             public ushort Delay { get; set; }
-        }
 
-        public static ImfPacket ReadImfPacket(this BinaryReader binaryReader)
-        {
-            return new ImfPacket()
+            public ImfPacket(BinaryReader binaryReader)
             {
-                Register = binaryReader.ReadByte(),
-                Data = binaryReader.ReadByte(),
-                Delay = binaryReader.ReadUInt16()
-            };
+                Register = binaryReader.ReadByte();
+                Data = binaryReader.ReadByte();
+                Delay = binaryReader.ReadUInt16();
+            }
         }
 
         /// <summary>
@@ -62,14 +59,14 @@ namespace OPL
                     stream.Seek(0, 0);
                     List<ImfPacket> list = new List<ImfPacket>();
                     while (stream.Position < stream.Length)
-                        list.Add(binaryReader.ReadImfPacket());
+                        list.Add(new ImfPacket(binaryReader));
                     imf = list.ToArray();
                 }
                 else
                 { // Type-1 format
                     imf = new ImfPacket[length];
                     for (uint i = 0; i < imf.Length; i++)
-                        imf[i] = binaryReader.ReadImfPacket();
+                        imf[i] = new ImfPacket(binaryReader);
                 }
             }
             return imf;

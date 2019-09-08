@@ -25,18 +25,18 @@ namespace OPL
         public byte[] Notes;
         public ushort Priority;
 
-        /// <param name="notes">How many notes to read in, or 0 to read till end of stream</param>
-        public Adl(Stream stream)
+        public Adl(Stream stream) : this(new BinaryReader(stream))
         {
-            using (BinaryReader binaryReader = new BinaryReader(stream))
-            {
-                uint length = binaryReader.ReadUInt32();
-                Priority = binaryReader.ReadUInt16();
-                binaryReader.Read(Instrument, 0, Instrument.Length);
-                Octave = binaryReader.ReadByte();
-                Notes = new byte[length];
-                stream.Read(Notes, 0, Notes.Length);
-            }
+        }
+
+        public Adl(BinaryReader binaryReader)
+        {
+            uint length = binaryReader.ReadUInt32();
+            Priority = binaryReader.ReadUInt16();
+            binaryReader.Read(Instrument, 0, Instrument.Length);
+            Octave = binaryReader.ReadByte();
+            Notes = new byte[length];
+            binaryReader.Read(Notes, 0, Notes.Length);
         }
 
         public byte Block
