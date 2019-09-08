@@ -27,7 +27,8 @@ namespace OPLinGodot
                 audioStreamPlayer = value;
                 value.Stream = new AudioStreamGenerator()
                 {
-                    MixRate = 48000
+                    MixRate = 48000,
+                    BufferLength = 0.05f, // Keep this as short as possible to minimize latency
                 };
             }
         }
