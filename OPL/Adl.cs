@@ -1,5 +1,4 @@
-﻿using NScumm.Core.Audio.OPL;
-using System.IO;
+﻿using System.IO;
 
 namespace OPL
 {
@@ -67,7 +66,7 @@ namespace OPL
             0x83, // cSust 	0x83 	Carrier sustain
             0xE0, // mWave 	0xE0 	Modulator waveform
             0xE3, // cWave 	0xE3 	Carrier waveform
-            0xC0, // nConn 	0xC0 	Feedback/connection (usually ignored and set to 0)
+            //0xC0, // nConn 	0xC0 	Feedback/connection (usually ignored and set to 0)
                   // voice 	- 	unknown (Muse-only)
                   // mode 	- 	unknown (Muse-only)
                   //UINT8[3] 	padding 	- 	Pad instrument definition up to 16 bytes

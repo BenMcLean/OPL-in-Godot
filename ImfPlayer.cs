@@ -57,7 +57,7 @@ namespace OPLinGodot
             FillBuffer();
         }
 
-        public override void _Process(float delta)
+        public override void _PhysicsProcess(float delta)
         {
             base._Process(delta);
             // Input
@@ -72,7 +72,7 @@ namespace OPLinGodot
             if (AudioStreamPlayer.Playing)
             {
                 TimeSinceLastPacket += delta;
-                if (TimeSinceLastPacket >= CurrentPacketDelay)
+                while (CurrentPacket < Song.Length && TimeSinceLastPacket >= CurrentPacketDelay)
                 {
                     TimeSinceLastPacket -= CurrentPacketDelay;
                     do

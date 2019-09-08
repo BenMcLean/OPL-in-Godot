@@ -35,7 +35,7 @@ namespace OPLinGodot
         }
         private Adl adl;
 
-        public override void _Process(float delta)
+        public override void _PhysicsProcess(float delta)
         {
             if (Opl != null && Adl != null)
             {
@@ -68,6 +68,7 @@ namespace OPLinGodot
         {
             for (uint i = 0; i < Adl.InstrumentPorts.Length; i++)
                 Opl.WriteReg(Adl.InstrumentPorts[i], Adl.Instrument[i]);
+            Opl.WriteReg(0xC0, 0); // Wolf3D's code ignores this value in its sound data, setting it to zero instead.
             return this;
         }
 
