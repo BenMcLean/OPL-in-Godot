@@ -22,14 +22,17 @@ namespace OPLinGodot
             }
             set
             {
-                SinceLastNote = 0f;
-                CurrentNote = 0;
-                if (Opl != null)
+                if (adl == null || value == null || value.Priority >= adl.Priority)
                 {
-                    if ((adl = value) != null)
-                        SetInstrument().PlayNote();
-                    else
-                        Note = false;
+                    SinceLastNote = 0f;
+                    CurrentNote = 0;
+                    if (Opl != null)
+                    {
+                        if ((adl = value) != null)
+                            SetInstrument().PlayNote();
+                        else
+                            Note = false;
+                    }
                 }
             }
         }
